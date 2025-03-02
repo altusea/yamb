@@ -13,20 +13,23 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 
+const props = defineProps<{
+  server: {
+    url: string
+    apiKey?: string
+  }
+}>()
+
 const videoPlayer = ref<HTMLVideoElement | null>(null)
 const volume = ref(1)
 const mediaSource = ref('')
 const error = ref('')
 
-// 使用占位符URL和API密钥
-const EMBY_SERVER = 'http://your-embyserver.com'
-const EMBY_API_KEY = 'your-api-key'
-
 async function loadMedia(itemId: string) {
   try {
-    const response = await axios.get(`${EMBY_SERVER}/Items/${itemId}/PlaybackInfo`, {
+    const response = await axios.get(`${props.server.url}/Items/${itemId}/PlaybackInfo`, {
       headers: {
-        'X-Emby-Token': EMBY_API_KEY
+        'X-Emby-Token': props.server.apiKey || ''
       }
     })
 
